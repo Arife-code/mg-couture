@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mustafa Güngör Couture – Retailer Registration</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #1a1a1a; padding: 2rem 1rem; }
+  .wrap { max-width: 620px; margin: 0 auto; }
+  .logo-area { text-align: center; margin-bottom: 2rem; }
+  .logo-title { font-size: 26px; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: #1a1a1a; }
+  .logo-sub { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: #888; margin-top: 4px; }
+  .gold-line { width: 60px; height: 1px; background: #C9A84C; margin: 12px auto; }
+  .tagline { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa; }
+  .lang-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 2rem; }
+  .lang-btn { border: 1px solid #ddd; border-radius: 20px; padding: 5px 18px; font-size: 13px; cursor: pointer; background: transparent; color: #888; transition: all 0.15s; }
+  .lang-btn.active { background: #C9A84C; border-color: #C9A84C; color: #fff; font-weight: 500; }
+  .section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #C9A84C; margin: 1.75rem 0 0.75rem; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .field-grid { grid-template-columns: 1fr; } }
+  .field-full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; font-size: 15px; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 10px 14px; background: #fff; color: #1a1a1a;
+    font-family: inherit; outline: none; transition: border-color 0.15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: #C9A84C; }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 1.5rem 0; }
+  .order-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  @media (max-width: 480px) { .order-row { grid-template-columns: 1fr 1fr; } .order-row .field:first-child { grid-column: 1 / -1; } }
+  .add-btn { background: transparent; border: 1px dashed #C9A84C; border-radius: 8px; color: #C9A84C; font-size: 13px; padding: 8px 16px; cursor: pointer; width: 100%; margin-top: 6px; font-family: inherit; }
+  .add-btn:hover { background: rgba(201,168,76,0.06); }
+  .submit-btn { width: 100%; padding: 14px; background: #C9A84C; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 1.75rem; font-family: inherit; transition: opacity 0.15s; }
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .required-star { color: #C9A84C; }
+  .success-box { display: none; text-align: center; padding: 3rem 1.5rem; background: #fafafa; border-radius: 12px; border: 1px solid #eee; margin-top: 1rem; }
+  .success-icon { font-size: 40px; color: #C9A84C; margin-bottom: 16px; }
+  .success-title { font-size: 18px; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; }
+  .success-text { font-size: 14px; color: #888; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-area">
+    <div class="logo-title">Mustafa Güngör</div>
+    <div class="gold-line"></div>
+    <div class="logo-sub">Couture</div>
+    <div style="height:8px;"></div>
+    <div class="tagline" id="sub-tagline">Retailer Registration · Barcelona</div>
+  </div>
+
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('en', this)">EN</button>
+    <button class="lang-btn" onclick="setLang('tr', this)">TR</button>
+    <button class="lang-btn" onclick="setLang('es', this)">ES</button>
+  </div>
+
+  <div id="form-area">
+    <div class="section-title" id="sec1">Company Information</div>
+    <div class="field-grid">
+      <div class="field">
+        <label id="lbl-company">Company Name <span class="required-star">*</span></label>
+        <input type="text" id="company" placeholder="e.g. Belle Bridal Paris">
+      </div>
+      <div class="field">
+        <label id="lbl-contact">Contact Person <span class="required-star">*</span></label>
+        <input type="text" id="contact" placeholder="Full name">
+      </div>
+      <div class="field">
+        <label id="lbl-phone">Phone Number <span class="required-star">*</span></label>
+        <input type="tel" id="phone" placeholder="+49 123 456789">
+      </div>
+      <div class="field">
+        <label id="lbl-email">E-Mail</label>
+        <input type="email" id="email" placeholder="info@yourboutique.com">
+      </div>
+      <div class="field">
+        <label id="lbl-country">Country <span class="required-star">*</span></label>
+        <select id="country">
+          <option value="">— Select —</option>
+          <option>Germany</option><option>France</option><option>Spain</option>
+          <option>Italy</option><option>Turkey</option><option>Netherlands</option>
+          <option>Belgium</option><option>United Kingdom</option><option>United States</option>
+          <option>Austria</option><option>Switzerland</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="lbl-city">City <span class="required-star">*</span></label>
+        <input type="text" id="city" placeholder="e.g. Berlin">
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-title" id="sec2">Boutique Details</div>
+    <div class="field-grid">
+      <div class="field">
+        <label id="lbl-type">Type of Boutique</label>
+        <select id="btype">
+          <option value="">— Select —</option>
+          <option id="opt-mono">Mono-brand boutique</option>
+          <option id="opt-multi">Multi-brand boutique</option>
+          <option id="opt-dept">Department store</option>
+          <option id="opt-online">Online shop</option>
+          <option id="opt-other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="lbl-branches">Number of Locations</label>
+        <input type="number" id="branches" min="1" placeholder="e.g. 3">
+      </div>
+      <div class="field field-full">
+        <label id="lbl-web">Website</label>
+        <input type="text" id="web" placeholder="www.yourboutique.com">
+      </div>
+      <div class="field field-full">
+        <label id="lbl-social">Social Media</label>
+        <input type="text" id="social" placeholder="@instagram / @facebook">
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-title" id="sec3">Order Interest</div>
+    <div id="order-rows">
+      <div class="order-row">
+        <div class="field">
+          <label id="lbl-coll">Collection / Model</label>
+          <input type="text" class="coll-input" placeholder="e.g. Classic, Bohème...">
+        </div>
+        <div class="field">
+          <label id="lbl-size">Size</label>
+          <select class="size-input">
+            <option value="">—</option>
+            <option>XS</option><option>S</option><option>M</option><option>L</option>
+            <option>XL</option><option>XXL</option><option>Custom</option>
+          </select>
+        </div>
+        <div class="field">
+          <label id="lbl-qty">Qty</label>
+          <input type="number" class="qty-input" min="1" placeholder="1">
+        </div>
+      </div>
+    </div>
+    <button class="add-btn" id="add-row-btn" onclick="addRow()">+ Add another item</button>
+
+    <hr class="divider">
+    <div class="section-title" id="sec4">Notes</div>
+    <div class="field field-full">
+      <label id="lbl-notes">Additional Notes / Questions</label>
+      <textarea id="notes" placeholder="Any special requests or questions..."></textarea>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit Registration</button>
+  </div>
+
+  <div class="success-box" id="success-box">
+    <div class="success-icon">✓</div>
+    <div class="success-title" id="success-title">Thank you for your registration!</div>
+    <div class="success-text" id="success-text">Your information has been saved. We will be in touch shortly.</div>
+  </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzqGy0VH9liP6ll3ZgmR2tUztKvpUrlHTwYpNp6jXf4cXJ5G3r99mQKqgmMka3FH6Mb/exec";
+
+const langs = {
+  en: { tagline:"Retailer Registration · Barcelona", sec1:"Company Information", sec2:"Boutique Details", sec3:"Order Interest", sec4:"Notes", lbl_company:"Company Name", lbl_contact:"Contact Person", lbl_phone:"Phone Number", lbl_email:"E-Mail", lbl_country:"Country", lbl_city:"City", lbl_type:"Type of Boutique", lbl_branches:"Number of Locations", lbl_web:"Website", lbl_social:"Social Media", lbl_coll:"Collection / Model", lbl_size:"Size", lbl_qty:"Qty", lbl_notes:"Additional Notes / Questions", ph_company:"e.g. Belle Bridal Paris", ph_contact:"Full name", ph_phone:"+49 123 456789", ph_email:"info@yourboutique.com", ph_city:"e.g. Berlin", ph_web:"www.yourboutique.com", ph_social:"@instagram / @facebook", ph_coll:"e.g. Classic, Bohème...", ph_notes:"Any special requests or questions...", opt_mono:"Mono-brand boutique", opt_multi:"Multi-brand boutique", opt_dept:"Department store", opt_online:"Online shop", opt_other:"Other", add_row:"+ Add another item", submit:"Submit Registration", submitting:"Saving...", success_title:"Thank you for your registration!", success_text:"Your information has been saved. We will be in touch shortly.", select:"— Select —", err:"Please fill in all required fields." },
+  tr: { tagline:"Bayi Kaydı · Barselona", sec1:"Şirket Bilgileri", sec2:"Butik Detayları", sec3:"Sipariş İlgisi", sec4:"Notlar", lbl_company:"Şirket Adı", lbl_contact:"İlgili Kişi", lbl_phone:"Telefon Numarası", lbl_email:"E-Posta", lbl_country:"Ülke", lbl_city:"Şehir", lbl_type:"Butik Türü", lbl_branches:"Şube Sayısı", lbl_web:"Web Sitesi", lbl_social:"Sosyal Medya", lbl_coll:"Koleksiyon / Model", lbl_size:"Beden", lbl_qty:"Adet", lbl_notes:"Ek Notlar / Sorular", ph_company:"örn. Belle Bridal Paris", ph_contact:"Ad Soyad", ph_phone:"+49 123 456789", ph_email:"info@butiginiz.com", ph_city:"örn. Berlin", ph_web:"www.butiginiz.com", ph_social:"@instagram / @facebook", ph_coll:"örn. Classic, Bohème...", ph_notes:"Özel istek veya sorularınız...", opt_mono:"Tek marka butik", opt_multi:"Çok markalı butik", opt_dept:"Mağaza / AVM", opt_online:"Online mağaza", opt_other:"Diğer", add_row:"+ Yeni ürün ekle", submit:"Kaydı Gönder", submitting:"Kaydediliyor...", success_title:"Kaydınız için teşekkürler!", success_text:"Bilgileriniz kaydedildi. En kısa sürede sizinle iletişime geçeceğiz.", select:"— Seçin —", err:"Lütfen zorunlu alanları doldurun." },
+  es: { tagline:"Registro de Distribuidor · Barcelona", sec1:"Información de la Empresa", sec2:"Detalles de la Boutique", sec3:"Interés en Pedidos", sec4:"Notas", lbl_company:"Nombre de la Empresa", lbl_contact:"Persona de Contacto", lbl_phone:"Teléfono", lbl_email:"Correo Electrónico", lbl_country:"País", lbl_city:"Ciudad", lbl_type:"Tipo de Boutique", lbl_branches:"Número de Tiendas", lbl_web:"Sitio Web", lbl_social:"Redes Sociales", lbl_coll:"Colección / Modelo", lbl_size:"Talla", lbl_qty:"Cant.", lbl_notes:"Notas Adicionales / Preguntas", ph_company:"ej. Belle Bridal París", ph_contact:"Nombre completo", ph_phone:"+34 123 456789", ph_email:"info@suboutique.com", ph_city:"ej. Madrid", ph_web:"www.suboutique.com", ph_social:"@instagram / @facebook", ph_coll:"ej. Classic, Bohème...", ph_notes:"Solicitudes especiales o preguntas...", opt_mono:"Boutique monomarca", opt_multi:"Boutique multimarca", opt_dept:"Grandes almacenes", opt_online:"Tienda online", opt_other:"Otro", add_row:"+ Agregar artículo", submit:"Enviar Registro", submitting:"Guardando...", success_title:"¡Gracias por su registro!", success_text:"Su información ha sido guardada. Nos pondremos en contacto pronto.", select:"— Seleccionar —", err:"Por favor, rellene todos los campos obligatorios." }
+};
+
+let currentLang = 'en';
+
+function setLang(l, btn) {
+  currentLang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = langs[l];
+  document.getElementById('sub-tagline').textContent = t.tagline;
+  document.getElementById('sec1').textContent = t.sec1;
+  document.getElementById('sec2').textContent = t.sec2;
+  document.getElementById('sec3').textContent = t.sec3;
+  document.getElementById('sec4').textContent = t.sec4;
+  document.getElementById('lbl-company').innerHTML = t.lbl_company + ' <span class="required-star">*</span>';
+  document.getElementById('lbl-contact').innerHTML = t.lbl_contact + ' <span class="required-star">*</span>';
+  document.getElementById('lbl-phone').innerHTML = t.lbl_phone + ' <span class="required-star">*</span>';
+  document.getElementById('lbl-email').textContent = t.lbl_email;
+  document.getElementById('lbl-country').innerHTML = t.lbl_country + ' <span class="required-star">*</span>';
+  document.getElementById('lbl-city').innerHTML = t.lbl_city + ' <span class="required-star">*</span>';
+  document.getElementById('lbl-type').textContent = t.lbl_type;
+  document.getElementById('lbl-branches').textContent = t.lbl_branches;
+  document.getElementById('lbl-web').textContent = t.lbl_web;
+  document.getElementById('lbl-social').textContent = t.lbl_social;
+  document.getElementById('lbl-notes').textContent = t.lbl_notes;
+  document.getElementById('lbl-coll').textContent = t.lbl_coll;
+  document.getElementById('lbl-size').textContent = t.lbl_size;
+  document.getElementById('lbl-qty').textContent = t.lbl_qty;
+  document.getElementById('company').placeholder = t.ph_company;
+  document.getElementById('contact').placeholder = t.ph_contact;
+  document.getElementById('phone').placeholder = t.ph_phone;
+  document.getElementById('email').placeholder = t.ph_email;
+  document.getElementById('city').placeholder = t.ph_city;
+  document.getElementById('web').placeholder = t.ph_web;
+  document.getElementById('social').placeholder = t.ph_social;
+  document.getElementById('notes').placeholder = t.ph_notes;
+  document.getElementById('add-row-btn').textContent = t.add_row;
+  document.getElementById('submit-btn').textContent = t.submit;
+  document.getElementById('opt-mono').textContent = t.opt_mono;
+  document.getElementById('opt-multi').textContent = t.opt_multi;
+  document.getElementById('opt-dept').textContent = t.opt_dept;
+  document.getElementById('opt-online').textContent = t.opt_online;
+  document.getElementById('opt-other').textContent = t.opt_other;
+  document.getElementById('country').options[0].textContent = t.select;
+  document.getElementById('btype').options[0].textContent = t.select;
+  document.querySelectorAll('.coll-input').forEach(el => el.placeholder = t.ph_coll);
+}
+
+function addRow() {
+  const t = langs[currentLang];
+  const container = document.getElementById('order-rows');
+  const row = document.createElement('div');
+  row.className = 'order-row';
+  row.innerHTML = `<div class="field"><label>${t.lbl_coll}</label><input type="text" class="coll-input" placeholder="${t.ph_coll}"></div><div class="field"><label>${t.lbl_size}</label><select class="size-input"><option value="">—</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>Custom</option></select></div><div class="field"><label>${t.lbl_qty}</label><input type="number" class="qty-input" min="1" placeholder="1"></div>`;
+  container.appendChild(row);
+}
+
+function submitForm() {
+  const t = langs[currentLang];
+  const company = document.getElementById('company').value.trim();
+  const contact = document.getElementById('contact').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const country = document.getElementById('country').value;
+  const city = document.getElementById('city').value.trim();
+  if (!company || !contact || !phone || !country || !city) { alert(t.err); return; }
+  const colls = [...document.querySelectorAll('.coll-input')].map(e => e.value).filter(Boolean);
+  const sizes = [...document.querySelectorAll('.size-input')].map(e => e.value);
+  const qtys = [...document.querySelectorAll('.qty-input')].map(e => e.value);
+  const orderSummary = colls.map((c,i) => `${c} (${sizes[i]||'—'}) x${qtys[i]||1}`).join('; ');
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = t.submitting;
+  fetch(SHEET_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      timestamp: new Date().toLocaleString('de-DE'),
+      lang: currentLang, company, contact, phone,
+      email: document.getElementById('email').value,
+      country, city,
+      boutique_type: document.getElementById('btype').value,
+      branches: document.getElementById('branches').value,
+      website: document.getElementById('web').value,
+      social: document.getElementById('social').value,
+      order: orderSummary,
+      notes: document.getElementById('notes').value
+    })
+  }).finally(() => {
+    document.getElementById('form-area').style.display = 'none';
+    document.getElementById('success-box').style.display = 'block';
+    document.getElementById('success-title').textContent = t.success_title;
+    document.getElementById('success-text').textContent = t.success_text;
+  });
+}
+</script>
+</body>
+</html>
