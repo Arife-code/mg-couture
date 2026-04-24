@@ -78,14 +78,7 @@
   .confirm-order-note { font-size: 12px; color: #666; font-style: italic; margin-top: 3px; }
   .confirm-total { text-align: right; font-size: 16px; font-weight: 600; color: #C9A84C; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
 
-  .email-option { display: flex; align-items: center; gap: 10px; margin-top: 1.5rem; padding: 14px; background: #fff; border: 1px solid #eee; border-radius: 8px; }
-  .email-option input[type="checkbox"] { width: 18px; height: 18px; accent-color: #C9A84C; }
-  .email-option label { font-size: 14px; color: #555; cursor: pointer; }
   .email-input-wrap { margin-top: 8px; }
-  .send-email-btn { margin-top: 1rem; width: 100%; padding: 12px; background: #C9A84C; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
-  .send-email-btn:hover { opacity: 0.88; }
-  .send-email-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .email-sent-msg { text-align: center; color: #C9A84C; font-size: 14px; margin-top: 10px; display: none; }
 
   .footer-address { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0; font-size: 12px; color: #aaa; line-height: 1.7; }
 </style>
@@ -128,15 +121,7 @@
       </div>
       <div class="field">
         <label id="lbl-country">Country <span class="required-star">*</span></label>
-        <select id="country" onchange="onCountryChange()">
-          <option value="">— Select —</option>
-          <option>Germany</option><option>France</option><option>Spain</option>
-          <option>Italy</option><option>Turkey</option><option>Netherlands</option>
-          <option>Belgium</option><option>United Kingdom</option><option>United States</option>
-          <option>Austria</option><option>Switzerland</option><option>Greece</option>
-          <option>Portugal</option><option>Poland</option><option>Romania</option>
-          <option>Other</option>
-        </select>
+        <input type="text" id="country" onblur="onCountryChange()" placeholder="">
       </div>
       <div class="field">
         <label id="lbl-city">City <span class="required-star">*</span></label>
@@ -194,16 +179,8 @@
     </div>
     <div id="confirm-content"></div>
 
-    <div class="email-option">
-      <input type="checkbox" id="email-confirm-check" onchange="toggleEmailConfirm()">
-      <label for="email-confirm-check" id="lbl-email-confirm">Send me a confirmation by e-mail</label>
-    </div>
-    <div id="email-confirm-area" style="display:none;">
-      <div class="email-input-wrap field">
-        <input type="email" id="confirm-email-input" placeholder="your@email.com">
-      </div>
-      <button class="send-email-btn" id="send-email-btn" onclick="sendConfirmEmail()">Send Confirmation</button>
-      <div class="email-sent-msg" id="email-sent-msg">✓ Confirmation sent!</div>
+    <div id="email-sent-notice" style="margin-top: 1.5rem; padding: 14px; background: #fff; border: 1px solid #C9A84C; border-radius: 8px; text-align: center; color: #C9A84C; font-size: 14px; font-weight: 500;">
+      <span id="email-sent-text">✉ A confirmation e-mail has been sent to you.</span>
     </div>
   </div>
 
@@ -337,6 +314,7 @@ const langs = {
     confirm_note:"Note", confirm_notes:"Notes",
     lbl_email_confirm:"Send me a confirmation by e-mail",
     send_email:"Send Confirmation", email_sent:"✓ Confirmation sent!",
+    email_auto_sent:"✉ A confirmation e-mail has been sent to you.",
     email_subject:"Your MG Couture Order Confirmation"
   },
   tr: {
@@ -366,6 +344,7 @@ const langs = {
     confirm_note:"Not", confirm_notes:"Notlar",
     lbl_email_confirm:"Onay e-postası gönder",
     send_email:"Onay Gönder", email_sent:"✓ Onay gönderildi!",
+    email_auto_sent:"✉ Size bir onay e-postası gönderildi.",
     email_subject:"MG Couture Sipariş Onayınız"
   },
   es: {
@@ -395,6 +374,7 @@ const langs = {
     confirm_note:"Nota", confirm_notes:"Notas",
     lbl_email_confirm:"Enviarme confirmación por correo",
     send_email:"Enviar Confirmación", email_sent:"✓ Confirmación enviada!",
+    email_auto_sent:"✉ Se le ha enviado un correo de confirmación.",
     email_subject:"Confirmación de Pedido MG Couture"
   },
   it: {
@@ -424,6 +404,7 @@ const langs = {
     confirm_note:"Nota", confirm_notes:"Note",
     lbl_email_confirm:"Inviami una conferma via e-mail",
     send_email:"Invia Conferma", email_sent:"✓ Conferma inviata!",
+    email_auto_sent:"✉ Ti è stata inviata una e-mail di conferma.",
     email_subject:"Conferma Ordine MG Couture"
   }
 };
@@ -432,11 +413,9 @@ let currentLang = 'en';
 let orderItemCount = 0;
 let submittedData = null;
 
-// ─── Country change → show Region field ───
+// ─── Country change → Region field always visible (free text input) ───
 function onCountryChange() {
-  const c = document.getElementById('country').value;
-  const show = ['Italy','Greece','Spain','Turkey','Germany','France','United Kingdom','United States','Portugal','Poland','Romania'].includes(c);
-  document.getElementById('region-field').style.display = show ? '' : 'none';
+  document.getElementById('region-field').style.display = '';
 }
 
 // ─── Language switching ───
@@ -474,7 +453,6 @@ function setLang(l, btn) {
   document.getElementById('notes').placeholder = t.ph_notes;
   document.getElementById('add-row-btn').textContent = t.add_row;
   document.getElementById('submit-btn').textContent = t.submit;
-  document.getElementById('country').options[0].textContent = t.select;
   // Update existing order item labels
   document.querySelectorAll('.order-item').forEach(item => {
     item.querySelector('.lbl-artnr').textContent = t.lbl_artnr;
@@ -658,7 +636,10 @@ function submitForm() {
       website: submittedData.website,
       social: submittedData.social,
       order: orderText,
-      notes: submittedData.notes
+      notes: submittedData.notes,
+      sendEmail: true,
+      emailSubject: t.email_subject,
+      emailData: submittedData
     })
   }).finally(() => {
     showConfirmation();
@@ -673,9 +654,7 @@ function showConfirmation() {
   document.getElementById('success-box').style.display = 'block';
   document.getElementById('success-title').textContent = t.success_title;
   document.getElementById('success-text').textContent = t.success_text;
-  document.getElementById('lbl-email-confirm').textContent = t.lbl_email_confirm;
-  document.getElementById('send-email-btn').textContent = t.send_email;
-  document.getElementById('confirm-email-input').value = d.email || '';
+  document.getElementById('email-sent-text').textContent = t.email_auto_sent;
 
   let html = '<div class="confirm-section">';
   html += `<div class="confirm-section-title">${t.sec1}</div>`;
@@ -724,36 +703,6 @@ function showConfirmation() {
   }
 
   document.getElementById('confirm-content').innerHTML = html;
-}
-
-// ─── Email confirmation toggle ───
-function toggleEmailConfirm() {
-  const checked = document.getElementById('email-confirm-check').checked;
-  document.getElementById('email-confirm-area').style.display = checked ? 'block' : 'none';
-}
-
-// ─── Send confirmation email via Apps Script ───
-function sendConfirmEmail() {
-  const emailTo = document.getElementById('confirm-email-input').value.trim();
-  if (!emailTo) return;
-  const btn = document.getElementById('send-email-btn');
-  btn.disabled = true;
-  const t = langs[currentLang];
-  btn.textContent = '...';
-
-  fetch(SHEET_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      action: 'sendConfirmation',
-      email: emailTo,
-      subject: t.email_subject,
-      data: submittedData
-    })
-  }).finally(() => {
-    btn.style.display = 'none';
-    document.getElementById('email-sent-msg').style.display = 'block';
-    document.getElementById('email-sent-msg').textContent = t.email_sent;
-  });
 }
 
 // ─── Init: add first order row ───
