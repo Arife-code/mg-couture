@@ -631,15 +631,20 @@ function submitForm() {
     method: 'POST',
     body: JSON.stringify({
       timestamp: submittedData.timestamp,
-      lang: currentLang, company, contact, phone,
-      email: emailVal, country, city, region, taxid,
+      lang: currentLang,
+      company: company,
+      contact: contact,
+      phone: phone,
+      email: emailVal,
+      country: country,
+      city: city,
+      region: region,
+      taxid: taxid,
       website: submittedData.website,
       social: submittedData.social,
       order: orderText,
-      notes: submittedData.notes,
-      sendEmail: true,
-      emailSubject: t.email_subject,
-      emailData: submittedData
+      orders: items,
+      notes: submittedData.notes
     })
   }).finally(() => {
     showConfirmation();
